@@ -1,0 +1,26 @@
+#install.packages("rpart")
+set.seed(123)
+library(rpart)
+df <- read.csv("Titanic/train.csv",na.strings = "")
+df$Survived <- as.factor(df$Survived)
+df$Pclass <- as.factor(df$Pclass)
+df$Embarked <- as.factor(df$Embarked)
+df.numeric <- df
+df.numeric$Sex=as.numeric(df.numeric[,'Sex'] == "male")
+df.numeric <- df.numeric[,-c(1,4,9,11)]
+titanic.rpart <- rpart(Survived ~ ., data = df.numeric,method="class")
+
+new_df <-read.csv('Titanic/test.csv',na.strings = "")
+ids<- new_df$PassengerId
+new_df$Pclass <- as.factor(new_df$Pclass)
+new_df$Embarked <- as.factor(new_df$Embarked)
+new_df.numeric <- new_df
+new_df.numeric$Sex=as.numeric(new_df.numeric[,'Sex'] == "male")
+new_df.numeric <- new_df.numeric[,-c(1,3,8,10)]
+predictions <- predict(titanic.rpart,newdata = new_df.numeric,type="vector")
+dec1 <- function(num){
+  return(num-1)
+}
+predictions=sapply(predictions, dec1)
+res <- cbind(PassengerId=ids,Survived=as.character(predictions))
+write.csv(res,file="Titanic/try3.csv",row.names = F)
