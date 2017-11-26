@@ -20,7 +20,7 @@ df.numeric <- df.numeric[,-c(1,4,9,11)]
 ```
 
 ## Algorithm Description
-For this algorithm we used the rpart package, which grows a decision tree and 
+For this algorithm we used the rpart package, which grows a decision tree that predicts whether a certain passenger survived.
 ```{r}
 titanic.rpart <- rpart(Survived ~ ., data = df.numeric,method="class")
 ```
