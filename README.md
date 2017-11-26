@@ -25,3 +25,6 @@ For this algorithm we used the rpart package, which grows a decision tree that p
 titanic.rpart <- rpart(Survived ~ ., data = df.numeric,method="class")
 ```
 ![Image of plot](https://github.com/sionovd/Titanic-Assignment/blob/master/images/Rplot.png)
+
+
+![Image of results](https://github.com/sionovd/Titanic-Assignment/blob/master/images/rpart.png)
