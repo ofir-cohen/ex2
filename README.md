@@ -24,4 +24,4 @@ For this algorithm we used the rpart package, which grows a decision tree and
 ```{r}
 titanic.rpart <- rpart(Survived ~ ., data = df.numeric,method="class")
 ```
-![Image of plot](/images/Rpart.jpeg)
+![Image of plot](/images/Rpart.png)
