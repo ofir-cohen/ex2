@@ -26,5 +26,8 @@ titanic.rpart <- rpart(Survived ~ ., data = df.numeric,method="class")
 ```
 ![Image of plot](https://github.com/sionovd/Titanic-Assignment/blob/master/images/Rplot.png)
 
+## Link to the code file
+https://github.com/sionovd/Titanic-Assignment/blob/master/Algorithms/RpartAlgorithm
 
+## Screenshot of the Kaggle submission
 ![Image of results](https://github.com/sionovd/Titanic-Assignment/blob/master/images/rpart.PNG)
