@@ -129,3 +129,9 @@ pred=sapply(pred, func)
 res <- cbind(PassengerId=ids,Survived=as.character(pred))
 write.csv(res,file="Titanic/ensemble.csv",row.names = F)
 ```
+
+### Link to the submitted file
+https://github.com/sionovd/ex2/blob/master/SubmittedFiles/ensemble.csv
+
+### Screenshot of the Kaggle submission
+![Image of results](https://github.com/sionovd/Titanic-Assignment/blob/master/images/rpart.PNG)
