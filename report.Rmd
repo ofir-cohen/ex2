@@ -163,7 +163,7 @@ The caretEnsemble function uses a glm to create a simple linear combination of t
 greedy_ensemble <- caretEnsemble(models)
 ```
 
-![Image of ensemble graph](https://github.com/sionovd/ex2/blob/master/images/ensembleplot.PNG)
+![Image of ensemble graph](https://github.com/sionovd/ex2/blob/master/images/ensembleplot.png)
 
 Then we calculated the prediction and wrote the results into a CSV file.
 ```{r}
