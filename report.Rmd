@@ -4,6 +4,9 @@
 We first converted the columns _Survived, Pclass,_ and _Embarked_ into factors:
 
 ```{r}
+#install.packages("rpart")
+set.seed(123)
+library(rpart)
 df <- read.csv("Titanic/train.csv",na.strings = "")
 df$Survived <- as.factor(df$Survived)
 df$Pclass <- as.factor(df$Pclass)
