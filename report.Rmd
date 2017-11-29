@@ -134,4 +134,4 @@ write.csv(res,file="Titanic/ensemble.csv",row.names = F)
 https://github.com/sionovd/ex2/blob/master/SubmittedFiles/ensemble.csv
 
 ### Screenshot of the Kaggle submission
-![Image of results](https://github.com/sionovd/Titanic-Assignment/blob/master/images/rpart.PNG)
+![Image of results 3](https://github.com/sionovd/ex2/blob/master/images/ensemble%20submission.PNG)
