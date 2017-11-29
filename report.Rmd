@@ -57,3 +57,75 @@ https://github.com/sionovd/ex2/blob/master/SubmittedFiles/try3.csv
 
 ## Data Preprocessing 
 
+First we converted the columns _Survived_, _Pclass_, and _Embarked_ into factors, and converted the _Sex_ column into a numeric column.
+We also removed irrelevant columns from the dataframe.
+```{r}
+#install all packeges from lines 2-7
+library(rpart)
+library(missForest)
+library(caretEnsemble)
+library(C50)
+library(tidyr)
+library(caret)
+set.seed(123)
+df <- read.csv("Titanic/train.csv",na.strings = "")
+df$Survived <- as.factor(df$Survived)
+df$Pclass <- as.factor(df$Pclass)
+df$Embarked <- as.factor(df$Embarked)
+df.numeric <- df
+df.numeric$Sex=as.numeric(df.numeric[,'Sex'] == "male")
+df.numeric <- df.numeric[,-c(1,4,9,11)]
+```
+
+After that, we used the _missForest_ function in order to impute the missing values.
+```{r}
+df.numeric <- missForest(df.numeric, maxiter = 10, ntree = 100)
+df.numeric <- df.numeric$ximp
+```
+
+### Parameter Tuning
+
+We set the number of resampling iterations to be 8 and defined the method to be cross validation. We used the "accuracy" metric.
+The methods that our ensemble algorithm used are _rpart_, _C5.0_. It also used _glm_ to fit the other models as generalized linear models. 
+```{r}
+levels(df.numeric$Survived) <- c("NO","Yes")
+control <- trainControl(method="cv", number=8,savePredictions = 'final',classProbs = TRUE)
+models <- caretList(
+  Survived ~ .,
+  data = df.numeric,
+  trControl = control,
+  metric = "Accuracy",
+  methodList = c("rpart","C5.0","glm")
+)
+```
+
+## Algorithm Description
+
+We used the _caretEnsemble_ function to create an ensemble model from the list of caret models that we defined above. 
+The caretEnsemble function uses a glm to create a simple linear combination of those models.
+```{r}
+greedy_ensemble <- caretEnsemble(models)
+```
+
+Then we calculated the prediction and wrote the results into a CSV file.
+```{r}
+new_df <-read.csv('Titanic/test.csv',na.strings = "")
+ids<- new_df$PassengerId
+new_df$Pclass <- as.factor(new_df$Pclass)
+new_df$Embarked <- as.factor(new_df$Embarked)
+new_df.numeric <- new_df
+new_df.numeric$Sex=as.numeric(new_df.numeric[,'Sex'] == "male")
+new_df.numeric <- new_df.numeric[,-c(1,3,8,10)]
+new_df.numeric <- missForest(new_df.numeric, maxiter = 10, ntree = 100)
+new_df.numeric <- new_df.numeric$ximp
+pred = predict(greedy_ensemble,newdata=new_df.numeric)
+func <- function(str){
+  if(str=="Yes")
+    return(1)
+  else
+  return(0)
+}
+pred=sapply(pred, func)
+res <- cbind(PassengerId=ids,Survived=as.character(pred))
+write.csv(res,file="Titanic/ensemble.csv",row.names = F)
+```
