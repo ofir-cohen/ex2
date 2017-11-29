@@ -105,7 +105,7 @@ write.csv(res,file="Titanic/try6.csv",row.names = F)
 ### Link to the submitted file
 
 ### Screenshot of the Kaggle submission
-![Image of results](https://github.com/sionovd/Titanic-Assignment/blob/master/images/rpart.PNG)
+![Image of results 2](https://github.com/sionovd/ex2/blob/master/images/c50submission.PNG)
 
 # Algorithm \#3: Ensemble
 
