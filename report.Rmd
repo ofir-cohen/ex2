@@ -52,3 +52,8 @@ https://github.com/sionovd/ex2/blob/master/SubmittedFiles/try3.csv
 
 ### Screenshot of the Kaggle submission
 ![Image of results](https://github.com/sionovd/Titanic-Assignment/blob/master/images/rpart.PNG)
+
+# Algorithm \#2: Ensemble
+
+## Data Preprocessing 
+
