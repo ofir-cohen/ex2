@@ -103,6 +103,7 @@ write.csv(res,file="Titanic/try6.csv",row.names = F)
 ```
 
 ### Link to the submitted file
+https://github.com/sionovd/ex2/blob/master/SubmittedFiles/try1.csv
 
 ### Screenshot of the Kaggle submission
 ![Image of results 2](https://github.com/sionovd/ex2/blob/master/images/c50submission.PNG)
@@ -161,6 +162,8 @@ The caretEnsemble function uses a glm to create a simple linear combination of t
 ```{r}
 greedy_ensemble <- caretEnsemble(models)
 ```
+
+![Image of ensemble graph](https://github.com/sionovd/ex2/blob/master/images/ensembleplot.PNG)
 
 Then we calculated the prediction and wrote the results into a CSV file.
 ```{r}
