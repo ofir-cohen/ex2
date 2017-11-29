@@ -26,6 +26,24 @@ titanic.rpart <- rpart(Survived ~ ., data = df.numeric,method="class")
 ```
 ![Image of plot](https://github.com/sionovd/Titanic-Assignment/blob/master/images/Rplot.png)
 
+We then calculated the prediction and wrote it into a CSV file.
+```{r}
+new_df <-read.csv('Titanic/test.csv',na.strings = "")
+ids<- new_df$PassengerId
+new_df$Pclass <- as.factor(new_df$Pclass)
+new_df$Embarked <- as.factor(new_df$Embarked)
+new_df.numeric <- new_df
+new_df.numeric$Sex=as.numeric(new_df.numeric[,'Sex'] == "male")
+new_df.numeric <- new_df.numeric[,-c(1,3,8,10)]
+predictions <- predict(titanic.rpart,newdata = new_df.numeric,type="vector")
+dec1 <- function(num){
+  return(num-1)
+}
+predictions=sapply(predictions, dec1)
+res <- cbind(PassengerId=ids,Survived=as.character(predictions))
+write.csv(res,file="Titanic/try3.csv",row.names = F)
+```
+
 ### Link to the submitted file
 https://github.com/sionovd/ex2/blob/master/SubmittedFiles/try3.csv
 
