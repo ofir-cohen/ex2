@@ -1,8 +1,8 @@
 # Algorithm \#1: rpart (basic algorithm)
 
 ## Data Preprocessing 
-We first converted the columns _Survived, Pclass,_ and _Embarked_ into factors:
 
+We first converted the columns _Survived, Pclass,_ and _Embarked_ into factors, because those columns are numeric and therefore can be easily used to detect patterns (as opposed to names).
 ```{r}
 #install.packages("rpart")
 set.seed(123)
@@ -24,6 +24,7 @@ df.numeric <- df.numeric[,-c(1,4,9,11)]
 
 ## Algorithm Description
 For this algorithm we used the rpart package, which grows a decision tree that predicts whether a certain passenger survived.
+There were no special parameters that required tuning for this algorithm.
 ```{r}
 titanic.rpart <- rpart(Survived ~ ., data = df.numeric,method="class")
 ```
@@ -53,7 +54,60 @@ https://github.com/sionovd/ex2/blob/master/SubmittedFiles/try3.csv
 ### Screenshot of the Kaggle submission
 ![Image of results](https://github.com/sionovd/Titanic-Assignment/blob/master/images/rpart.PNG)
 
-# Algorithm \#2: Ensemble
+
+# Algorithm \#2: C5.0 (basic algorithm)
+
+## Data Preprocessing
+
+We first converted the _Survived_ and _Pclass_ columns into factors. Then we converted the _Sex_ column into a numeric column in order to only deal with numeric columns. And then we removed columns that we thought to be irrelevant. 
+```{r}
+#install.packages("caret")
+#install.packages("e1071")
+#install.packages('C50')
+library(C50)
+library(tidyr)
+library(caret)
+set.seed(123)
+df <- read.csv("Titanic/train.csv", na.strings = "")
+df$Survived <- as.factor(df$Survived)
+df$Pclass <- as.factor(df$Pclass)
+df$Sex=as.numeric(df[,'Sex'] == "male")
+df <- df[,-c(1,4,9)]
+```
+
+### Parameter Tuning
+Using trial and error, we chose the method to be cross validation, and we tuned the number of folds of the cross validation to be 8. 
+```{r}
+control <- trainControl(method="cv", number=8)
+```
+
+### Algorithm Description
+
+In this algorithm we trained a C5.0 decision-tree model using the caret package.
+We set the na.action parameter to _na.pass_ in order to avoid any "fails" over missing values. 
+```{r}
+fit.c50 <- train(Survived~., data=df, method="C5.0", metric="Accuracy", trControl=control,na.action = na.pass)
+```
+
+Finally, we computed the prediction and wrote our results to a CSV file. 
+```{r}
+new_df <-read.csv('Titanic/test.csv',na.strings = "")
+ids<- new_df$PassengerId
+new_df$Pclass<- as.factor(new_df$Pclass)
+new_df$Sex=as.numeric(new_df[,'Sex'] == "male")
+new_df<- new_df[,-c(1,3,8)]
+fit.c50$xlevels[["Cabin"]] <- union(fit.c50$xlevels[["Cabin"]], levels(new_df$Cabin))
+new_pred<- predict(fit.c50,new_df,na.action = na.pass)
+res <- cbind(PassengerId=ids,Survived=as.character(new_pred))
+write.csv(res,file="Titanic/try6.csv",row.names = F)
+```
+
+### Link to the submitted file
+
+### Screenshot of the Kaggle submission
+![Image of results](https://github.com/sionovd/Titanic-Assignment/blob/master/images/rpart.PNG)
+
+# Algorithm \#3: Ensemble
 
 ## Data Preprocessing 
 
@@ -85,8 +139,9 @@ df.numeric <- df.numeric$ximp
 
 ### Parameter Tuning
 
-We set the number of resampling iterations to be 8 and defined the method to be cross validation. We used the "accuracy" metric.
-The methods that our ensemble algorithm used are _rpart_, _C5.0_. It also used _glm_ to fit the other models as generalized linear models. 
+We set the number of resampling iterations to be 8 and defined the method to be cross validation. We used the "Accuracy" metric because we are doing classification.
+We set the _classProbs_ parameter to be true, so that probabilities will be computed for classification models in each resample.
+The methods that our ensemble algorithm used are _rpart_, _C5.0_, and _glm_ - which is used to fit the other models as generalized linear models. 
 ```{r}
 levels(df.numeric$Survived) <- c("NO","Yes")
 control <- trainControl(method="cv", number=8,savePredictions = 'final',classProbs = TRUE)
